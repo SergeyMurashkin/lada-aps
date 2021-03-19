@@ -9,7 +9,7 @@
 <header th:insert="blocks/header"/>
 <h1 th:text="${title}"></h1>
 
-<form th:method="POST" th:action="@{/customers/signUp}" th:object="${customer}">
+<form th:method="POST" th:action="@{/signUp}" th:object="${customer}">
 <!--    <input type="text" name="firstName" placeholder="Введите имя" class="form-control">-->
 <!--    <input type="text" name="lastName" placeholder="Введите фамилию" class="form-control">-->
 <!--    <input type="text" name="email" placeholder="Введите email" class="form-control">-->
@@ -34,6 +34,21 @@
         for errors
     </div>
     <div style="color:red" th:if="${emailDuplicateError}" th:text="${emailDuplicateError}">
+        for errors
+    </div>
+    <br/>
+    <label for="email">Введите username: </label>
+    <input type="text" th:field="*{username}" id="username" class="form-control">
+    <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+        for errors
+    </div>
+    <div style="color:red" th:if="${usernameDuplicateError}" th:text="${usernameDuplicateError}">
+        for errors
+    </div>
+    <br/>
+    <label for="email">Введите пароль: </label>
+    <input type="text" th:field="*{password}" id="password" class="form-control">
+    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
         for errors
     </div>
     <br/>

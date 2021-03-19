@@ -1,12 +1,25 @@
 package ru.murashkin.ladaAps.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import ru.murashkin.ladaAps.models.Customer;
+import ru.murashkin.ladaAps.models.Role;
+import ru.murashkin.ladaAps.repositories.CustomerRepository;
+
+import javax.validation.Valid;
+import java.util.Collections;
 
 @Controller
 public class HomeController {
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -32,6 +45,39 @@ public class HomeController {
 
         model.addAttribute("customer", new Customer());
         return "signUp";
+    }
+
+    @PostMapping("/signUp")
+    public String signUp(@ModelAttribute("customer") @Valid Customer customer,
+                         BindingResult bindingResult,
+                         Model model) {
+        if (bindingResult.hasErrors()) {
+            return "signUp";
+        }
+
+        Customer customerWithEmail = customerRepository.findByEmail(customer.getEmail());
+        if (customerWithEmail != null) {
+            model.addAttribute("emailDuplicateError", "Email уже существует");
+            return "signUp";
+        }
+
+        Customer customerWithUsername = customerRepository.findByUsername(customer.getUsername());
+        if (customerWithUsername != null) {
+            model.addAttribute("usernameDuplicateError", "Username уже существует");
+            return "signUp";
+        }
+
+        customer.setActive(true);
+        customer.setRoles(Collections.singleton(Role.USER));
+
+        try {
+            customerRepository.save(customer);
+        } catch (DataIntegrityViolationException ex) {
+            model.addAttribute("emailDuplicateError", ex.getMessage());
+            return "signUp";
+        }
+
+        return "redirect:/login";
     }
 
 }

@@ -4,14 +4,16 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
-@Table(name="Customers")
+@Table(name = "Customers")
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Customers_seq")
-    @SequenceGenerator(name="Customers_seq", sequenceName="Customers_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Customers_seq")
+//    @SequenceGenerator(name = "Customers_seq", sequenceName = "Customers_SEQUENCE")
     private Long id;
     @NotEmpty
     @Size(min = 1, max = 35)
@@ -24,16 +26,19 @@ public class Customer {
     @Column(unique = true)
     @Email
     private String email;
+    @NotEmpty
+    @Column(unique = true)
+    private String username;
+    @NotEmpty
+    @Size(min = 5, max = 20)
+    private String password;
+    private boolean active;
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "customer_role", joinColumns = @JoinColumn(name = "customer_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
 
     public Customer() {
-    }
-
-    public Customer(@NotEmpty @Size(min = 1, max = 35) String firstName,
-                    @NotEmpty @Size(min = 1, max = 25) String lastName,
-                    @NotEmpty @Size(min = 1, max = 35) @Email String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
     }
 
     public void setId(Long id) {
@@ -66,6 +71,38 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean active() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override

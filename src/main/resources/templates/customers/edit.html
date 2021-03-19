@@ -9,7 +9,7 @@
     <header th:insert="blocks/header"/>
         <h1 th:text="${title}"></h1>
 
-    <form th:method="PATCH" th:action="@{/customers/edit/{id}(id=${customer.getId()})}" th:object="${customer}">
+    <form th:method="PATCH" th:action="@{/customers/edit}" th:object="${customer}">
         <label for="firstName">Введите новое имя: </label>
         <input type="text" th:field="*{firstName}" id="firstName">
         <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
