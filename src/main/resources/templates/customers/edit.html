@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Getting Started: Serving Web Content</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    </head>
+    <body>
+    <header th:insert="blocks/header"/>
+        <h1 th:text="${title}"></h1>
+
+    <form th:method="PATCH" th:action="@{/customers/edit/{id}(id=${customer.getId()})}" th:object="${customer}">
+        <label for="firstName">Введите новое имя: </label>
+        <input type="text" th:field="*{firstName}" id="firstName">
+        <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
+            for errors
+        </div>
+        <br/>
+        <label for="lastName">Введите новую фамилию: </label>
+        <input type="text" th:field="*{lastName}" id="lastName">
+        <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
+            for errors
+        </div>
+        <br/>
+        <input type="submit" value="Обновить!">
+    </form>
+
+    </body>
+</html>

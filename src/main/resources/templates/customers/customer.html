@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Getting Started: Serving Web Content</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    </head>
+    <body>
+        <header th:insert="blocks/header"/>
+        <h1 th:text="${title}"></h1>
+
+        <h1 th:text="${error}"></h1>
+
+        <h1 th:text="${customer.getFirstName()}"></h1>
+        <h1 th:text="${customer.getLastName()}"></h1>
+        <h1 th:text="${customer.getEmail()}"></h1>
+
+        <a th:href="@{/customers/edit/{id}(id=${customer.getId()})}" >Редактировать профиль!</a>
+    </body>
+</html>
