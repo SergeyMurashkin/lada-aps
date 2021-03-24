@@ -2,6 +2,7 @@ package ru.murashkin.ladaAps.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,9 @@ public class HomeController {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -67,13 +71,17 @@ public class HomeController {
             return "signUp";
         }
 
+        String passwordBeforeCrypt = customer.getPassword();
+
         customer.setActive(true);
         customer.setRoles(Collections.singleton(Role.USER));
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
 
         try {
             customerRepository.save(customer);
         } catch (DataIntegrityViolationException ex) {
             model.addAttribute("emailDuplicateError", ex.getMessage());
+            customer.setPassword(passwordBeforeCrypt);
             return "signUp";
         }
 
