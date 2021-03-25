@@ -83,6 +83,9 @@ public class HomeController {
             model.addAttribute("emailDuplicateError", ex.getMessage());
             customer.setPassword(passwordBeforeCrypt);
             return "signUp";
+        } catch (Throwable ex) {
+            customer.setPassword(passwordBeforeCrypt);
+            return "signUp";
         }
 
         return "redirect:/login";
